@@ -5281,6 +5281,14 @@
                     "headwind.classRegex": {
                         "type": "object",
                         "default": {
+                            "haml": [
+                                {
+                                    "regex": ["\\.([_a-zA-Z0-9\\-:]+)"],
+                                    "separator": "\\.",
+                                    "replacement": "."
+                                },
+                                "(\\.[_a-zA-Z0-9\\-]+(?:\\.[\\._a-zA-Z0-9-:]+)*)(?=\\{|\n)"
+                            ],
                             "jade": [
                                 {
                                     "regex": "\\.([\\._a-zA-Z0-9\\-]+)",

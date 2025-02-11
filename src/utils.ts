@@ -20,14 +20,22 @@ export const sortClassString = (
 	sortOrder: string[],
 	options: Options
 ): string => {
-	let classArray = classString.split(options.separator || /\s+/g);
+	
+	const default_separator = classString.includes(' ') ? /\s+/g : '.';
+	const default_replacement = classString.includes(' ') ? ' ' : '.';
+	
+	let classArray = classString.split(options.separator || default_separator);
 
+	classArray = classArray.filter((el) => el !== '');
+
+	console.log("classArray", classArray)
 	if (options.shouldRemoveDuplicates) {
 		classArray = removeDuplicates(classArray);
 	}
 
 	// prepend custom tailwind prefix to all tailwind sortOrder-classes
 	const sortOrderClone = [...sortOrder];
+
 	if (options.customTailwindPrefix.length > 0) {
 		for (var i = 0; i < sortOrderClone.length; i++) {
 			sortOrderClone[i] = options.customTailwindPrefix + sortOrderClone[i];
@@ -40,7 +48,17 @@ export const sortClassString = (
 		options.shouldPrependCustomClasses
 	);
 
-	return classArray.join(options.replacement || ' ').trim();
+	console.log("new classArray", classArray)
+	const result = classArray.join(options.replacement || default_replacement).trim()
+	console.log("result", result)
+	if( (default_separator == ".") && (classString.startsWith(".")))
+	{
+		return "." + result;
+	}
+	else
+	{
+		return result
+	};
 };
 
 const sortClassArray = (

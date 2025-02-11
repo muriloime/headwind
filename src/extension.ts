@@ -5,6 +5,7 @@ import { sortClassString, getTextMatch, buildMatchers } from './utils';
 import { spawn } from 'child_process';
 import { rustyWindPath } from 'rustywind';
 
+console.log("XXXX")
 export type LangConfig =
 	| string
 	| string[]
@@ -44,9 +45,14 @@ export function activate(context: ExtensionContext) {
 			const editorText = editor.document.getText();
 			const editorLangId = editor.document.languageId;
 
+			console.log("editorText", editorText)
 			const matchers = buildMatchers(
 				langConfig[editorLangId] || langConfig['html']
 			);
+
+			console.log("matchers", matchers)
+			console.log("editorLangId", editorLangId)
+			console.log("langConfig", langConfig[editorLangId])
 
 			for (const matcher of matchers) {
 				getTextMatch(matcher.regex, editorText, (text, startPosition) => {
@@ -55,6 +61,8 @@ export function activate(context: ExtensionContext) {
 						editor.document.positionAt(startPosition),
 						editor.document.positionAt(endPosition)
 					);
+					console.log("range", range)
+					console.log("positions", startPosition, endPosition)
 
 					const options = {
 						shouldRemoveDuplicates,
@@ -63,15 +71,31 @@ export function activate(context: ExtensionContext) {
 						separator: matcher.separator,
 						replacement: matcher.replacement,
 					};
-
-					edit.replace(
-						range,
-						sortClassString(
-							text,
-							Array.isArray(sortOrder) ? sortOrder : [],
-							options
-						)
+					const sorted = sortClassString(
+						text,
+						Array.isArray(sortOrder) ? sortOrder : [],
+						options
 					);
+					console.log("matcher", matcher)
+					console.log("options", options)
+					console.log("sorted", sorted)
+					if (sorted != text) {
+						editor.edit(editBuilder => {
+							editBuilder.replace(
+								range,
+								sorted
+							);
+						}).then(success => {
+							if (!success) {
+								console.log('Failed to apply edit!, success:', success, 'range', range, 'sorted:', sorted);
+							}
+							else {
+								console.log('Edit applied successfully!');
+							}
+						}, error => {
+							console.error('Error applying edit:', error);
+						});
+					}
 				});
 			}
 		}
