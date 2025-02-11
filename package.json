@@ -14,7 +14,7 @@
         "color": "#f1f5f8"
     },
     "icon": "icon.png",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "publisher": "heybourn",
     "license": "MIT",
     "author": "Ryan Heybourn <ryan@heybourn.com>",
@@ -5283,7 +5283,9 @@
                         "default": {
                             "haml": [
                                 {
-                                    "regex": ["\\.([_a-zA-Z0-9\\-:]+)"],
+                                    "regex": [
+                                        "\\.([_a-zA-Z0-9\\-:]+)"
+                                    ],
                                     "separator": "\\.",
                                     "replacement": "."
                                 },
