@@ -29,6 +29,11 @@ Headwind can sort individual files by running 'Sort Tailwind CSS Classes' via th
 
 Any breakpoints or unknown classes will be moved to the end of the class list, whilst duplicate classes will be removed.
 
+## Skip execution
+
+use the string headwind-ignore-all to skip the whole file, 
+use the string headwind-ignore to skip a single line 
+
 ## Customisation
 
 Headwind ships with a default class order (located in [package.json](package.json)). You can edit this (and other settings) to your liking on the extension settings page.

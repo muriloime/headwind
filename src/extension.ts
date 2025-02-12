@@ -51,7 +51,15 @@ export function activate(context: ExtensionContext) {
             const edits: { range: Range; sorted: string }[] = [];
 
             for (const matcher of matchers) {
+                // skip if text contains headwind-ignore-all
+                if (editorText.includes('headwind-ignore-all')) {
+                    return;
+                }
                 getTextMatch(matcher.regex, editorText, (text, startPosition) => {
+                    //skip if text contains headwind-ignore
+                    if (text.includes('headwind-ignore')) {
+                        return;
+                    }
                     const endPosition = startPosition + text.length;
                     const range = new Range(
                         editor.document.positionAt(startPosition),
