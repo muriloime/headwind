@@ -99,15 +99,19 @@ export function activate(context: ExtensionContext) {
 
     let runOnProject = commands.registerCommand(
         'headwind.sortTailwindClassesOnWorkspace',
-        () => {
+        async () => {
             let workspaceFolder = workspace.workspaceFolders || [];
-            if (workspaceFolder[0]) {
+            for (const folder of workspaceFolder) {
+
+                // Call sortTailwindClasses for all workspace files with extensions ['jade', 'haml']
+                const extensionFiles = await workspace.findFiles('**/*.{jade,haml}');
+
                 window.showInformationMessage(
-                    `Running Headwind on: ${workspaceFolder[0].uri.fsPath}`
+                    `Running Headwind on: ${folder.uri.fsPath}, ${extensionFiles.length} files found.`
                 );
 
                 let rustyWindArgs = [
-                    workspaceFolder[0].uri.fsPath,
+                    folder.uri.fsPath,
                     '--write',
                     shouldRemoveDuplicates ? '' : '--allow-duplicates',
                 ].filter((arg) => arg !== '');
@@ -128,6 +132,12 @@ export function activate(context: ExtensionContext) {
                         window.showErrorMessage(`Headwind error: ${data.toString()}`);
                     }
                 });
+
+                for (const file of extensionFiles) {
+                    const document = await workspace.openTextDocument(file);
+                    const editor = await window.showTextDocument(document);
+                    await commands.executeCommand('headwind.sortTailwindClasses', editor);
+                }
             }
         }
     );
