@@ -111,7 +111,7 @@ export function activate(context: ExtensionContext) {
                 for (const file of extensionFiles) {
                     const document = await workspace.openTextDocument(file);
                     const editor = await window.showTextDocument(document);
-                    await commands.executeCommand('headwind.sortTailwindClasses', editor);
+                    await commands.executeCommand('headwind.sortTailwindClasses');
                 }
             }
         }
