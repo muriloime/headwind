@@ -32,9 +32,12 @@ const shouldPrependCustomClasses =
         : false;
 
 export function activate(context: ExtensionContext) {
-    let disposable = commands.registerTextEditorCommand(
+    let disposable = commands.registerCommand(
         'headwind.sortTailwindClasses',
-        async function (editor, edit) {
+        async () => {
+            const editor = window.activeTextEditor;
+            if (!editor) return;
+
             const editorText = editor.document.getText();
             const editorLangId = editor.document.languageId;
 
@@ -51,19 +54,20 @@ export function activate(context: ExtensionContext) {
 
             // If text changed, replace the entire document
             if (sortedText !== editorText) {
-                const firstLine = editor.document.lineAt(0);
-                const lastLine = editor.document.lineAt(editor.document.lineCount - 1);
-                const fullRange = new Range(firstLine.range.start, lastLine.range.end);
+                const fullRange = new Range(
+                    editor.document.positionAt(0),
+                    editor.document.positionAt(editorText.length)
+                );
 
-                editor.edit((editBuilder) => {
+                const success = await editor.edit((editBuilder) => {
                     editBuilder.replace(fullRange, sortedText);
-                }).then(success => {
-                    if (!success) {
-                        console.log('Failed to apply edits!');
-                    } else {
-                        console.log('Edits applied successfully!');
-                    }
                 });
+
+                if (!success) {
+                    console.log('Failed to apply edits!');
+                } else {
+                    console.log('Edits applied successfully!');
+                }
             }
         }
     );
