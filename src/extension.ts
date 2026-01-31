@@ -1,7 +1,7 @@
 'use strict';
 
-import { commands, workspace, ExtensionContext, Range, window, TextEditorEdit } from 'vscode';
-import { sortClassString, getTextMatch, buildMatchers, LangConfig } from './utils';
+import { commands, workspace, ExtensionContext, Range, window } from 'vscode';
+import { processText, LangConfig } from './utils';
 import { spawn } from 'child_process';
 import { rustyWindPath } from 'rustywind';
 
@@ -34,60 +34,37 @@ const shouldPrependCustomClasses =
 export function activate(context: ExtensionContext) {
     let disposable = commands.registerTextEditorCommand(
         'headwind.sortTailwindClasses',
-        function (editor, edit) {
+        async function (editor, edit) {
             const editorText = editor.document.getText();
             const editorLangId = editor.document.languageId;
 
-            const matchers = buildMatchers(
-                langConfig[editorLangId] || langConfig['html']
-            );
+            const options = {
+                shouldRemoveDuplicates,
+                shouldPrependCustomClasses,
+                customTailwindPrefix,
+            };
 
-            const edits: { range: Range; sorted: string }[] = [];
+            const langCfg = langConfig[editorLangId] || langConfig['html'];
 
-            for (const matcher of matchers) {
-                // skip if text contains headwind-ignore-all
-                if (editorText.includes('headwind-ignore-all')) {
-                    return;
-                }
-                getTextMatch(matcher.regex, editorText, (text, startPosition) => {
-                    //skip if text contains headwind-ignore
-                    if (text.includes('headwind-ignore')) {
-                        return;
-                    }
-                    const endPosition = startPosition + text.length;
-                    const range = new Range(
-                        editor.document.positionAt(startPosition),
-                        editor.document.positionAt(endPosition)
-                    );
-                    const options = {
-                        shouldRemoveDuplicates,
-                        shouldPrependCustomClasses,
-                        customTailwindPrefix,
-                        separator: matcher.separator,
-                        replacement: matcher.replacement,
-                    };
-                    const sorted = sortClassString(
-                        text,
-                        Array.isArray(sortOrder) ? sortOrder : [],
-                        options
-                    );
-                    if (sorted != text) {
-                        edits.push({ range, sorted });
+            // Process the text using the new processText function
+            const sortedText = await processText(editorText, langCfg, options);
+
+            // If text changed, replace the entire document
+            if (sortedText !== editorText) {
+                const firstLine = editor.document.lineAt(0);
+                const lastLine = editor.document.lineAt(editor.document.lineCount - 1);
+                const fullRange = new Range(firstLine.range.start, lastLine.range.end);
+
+                editor.edit((editBuilder) => {
+                    editBuilder.replace(fullRange, sortedText);
+                }).then(success => {
+                    if (!success) {
+                        console.log('Failed to apply edits!');
+                    } else {
+                        console.log('Edits applied successfully!');
                     }
                 });
             }
-
-            editor.edit((editBuilder: TextEditorEdit) => {
-                for (const { range, sorted } of edits) {
-                    editBuilder.replace(range, sorted);
-                }
-            }).then(success => {
-                if (!success) {
-                    console.log('Failed to apply edits!');
-                } else {
-                    console.log('Edits applied successfully!');
-                }
-            });
         }
     );
 

@@ -3,6 +3,8 @@ export {
 	sortClassString,
 	buildMatchers,
 	getTextMatch,
+	processText,
+	processFile,
 	Options,
 	LangConfig,
 	Matcher
