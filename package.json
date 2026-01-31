@@ -5371,6 +5371,7 @@
         "typescript": "^3.5.1"
     },
     "dependencies": {
-        "rustywind": "^0.7.1"
+        "rustywind": "^0.7.1",
+        "tailwind-class-sorter": "file:../tailwind-class-sorter"
     }
 }

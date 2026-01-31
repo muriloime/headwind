@@ -3,8 +3,8 @@ import {
 	getTextMatch,
 	buildMatchers,
 	Matcher,
+	LangConfig,
 } from '../src/utils';
-import { LangConfig } from '../src/extension';
 import 'jest';
 import * as _ from 'lodash';
 
