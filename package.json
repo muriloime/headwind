@@ -14,7 +14,7 @@
         "color": "#f1f5f8"
     },
     "icon": "icon.png",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "publisher": "Murilo",
     "license": "MIT",
     "author": "Ryan Heybourn <ryan@heybourn.com>, Murilo <muriloime@gmail.com>",
@@ -56,74 +56,74 @@
         "configuration": {
             "title": "Headwind",
             "properties": {
-                    "headwind.classRegex": {
-                        "type": "object",
-                        "default": {
-                            "haml": [
-                                {
-                                    "regex": [
-                                        "\\.([_a-zA-Z0-9\\-:]+)"
-                                    ],
-                                    "separator": "\\.",
-                                    "replacement": "."
-                                },
-                                "(?:^|\n)\\s*(?:(?:[%#][a-zA-Z0-9-_]+)*)((\\.[_a-zA-Z0-9\\-:]+)(?:\\.[\\._a-zA-Z0-9\\-:]+)*)\\s*(?=\\{|\n)"
-                            ],
-                            "jade": [
-                                {
-                                    "regex": "\\.([\\._a-zA-Z0-9\\-]+)",
-                                    "separator": "\\.",
-                                    "replacement": "."
-                                },
-                                "\\bclass\\s*=\\s*[\\\"\\']([\\._a-zA-Z0-9\\s\\-\\:\\/]+)[\\\"\\']"
-                            ],
-                            "html": "\\bclass\\s*=\\s*[\\\"\\']([\\._a-zA-Z0-9\\s\\-\\:\\/]+)[\\\"\\']",
-                            "css": "\\B@apply\\s+([\\._a-zA-Z0-9\\s\\-\\:\\/]+);",
-                            "javascript": [
-                                "(?:\\b(?:class(?:Name)?|tw)\\s*=\\s*(?:(?:{([\\w\\d\\s!?_\\-:/${}()[\\]\"'`,]+)})|([\"'`][\\.\\w\\d\\s_\\-:/]+[\"'`])))",
-                                "(?:[\"'`]([\\.\\w\\d\\s_\\-:/${}()[\\]]+)[\"'`])"
-                            ],
-                            "javascriptreact": [
-                                "(?:\\b(?:class(?:Name)?|tw)\\s*=\\s*(?:(?:{([\\w\\d\\s!?_\\-:/${}()[\\]\"'`,]+)})|([\"'`][\\w\\d\\s_\\-:/]+[\"'`])))",
-                                "(?:[\"'`]([\\.\\w\\d\\s_\\-:/${}()[\\]]+)[\"'`])"
-                            ],
-                            "typescript": [
-                                "(?:\\b(?:class(?:Name)?|tw)\\s*=\\s*(?:(?:{([\\w\\d\\s!?_\\-:/${}()[\\]\"'`,]+)})|([\"'`][\\w\\d\\s_\\-:/]+[\"'`])))",
-                                "(?:[\"'`]([\\.\\w\\d\\s_\\-:/${}()[\\]]+)[\"'`])"
-                            ],
-                            "typescriptreact": [
-                                "(?:\\b(?:class(?:Name)?|tw)\\s*=\\s*(?:(?:{([\\w\\d\\s!?_\\-:/${}()[\\]\"'`,]+)})|([\"'`][\\w\\d\\s_\\-:/]+[\"'`])))",
-                                "(?:[\"'`]([\\.\\w\\d\\s_\\-:/${}()[\\]]+)[\"'`])"
-                            ]
-                        },
-                        "description": "An object with language IDs as keys and their values determining the regex to search for Tailwind CSS classes.",
-                        "scope": "window"
+                "headwind.classRegex": {
+                    "type": "object",
+                    "default": {
+                        "haml": [
+                            {
+                                "regex": [
+                                    "\\.([_a-zA-Z0-9\\-:]+)"
+                                ],
+                                "separator": "\\.",
+                                "replacement": "."
+                            },
+                            "(?:^|\n)\\s*(?:(?:[%#][a-zA-Z0-9-_]+)*)((\\.[_a-zA-Z0-9\\-:]+)(?:\\.[\\._a-zA-Z0-9\\-:]+)*)\\s*(?=\\{|\n)"
+                        ],
+                        "jade": [
+                            {
+                                "regex": "\\.([\\._a-zA-Z0-9\\-]+)",
+                                "separator": "\\.",
+                                "replacement": "."
+                            },
+                            "\\bclass\\s*=\\s*[\\\"\\']([\\._a-zA-Z0-9\\s\\-\\:\\/]+)[\\\"\\']"
+                        ],
+                        "html": "\\bclass\\s*=\\s*[\\\"\\']([\\._a-zA-Z0-9\\s\\-\\:\\/]+)[\\\"\\']",
+                        "css": "\\B@apply\\s+([\\._a-zA-Z0-9\\s\\-\\:\\/]+);",
+                        "javascript": [
+                            "(?:\\b(?:class(?:Name)?|tw)\\s*=\\s*(?:(?:{([\\w\\d\\s!?_\\-:/${}()[\\]\"'`,]+)})|([\"'`][\\.\\w\\d\\s_\\-:/]+[\"'`])))",
+                            "(?:[\"'`]([\\.\\w\\d\\s_\\-:/${}()[\\]]+)[\"'`])"
+                        ],
+                        "javascriptreact": [
+                            "(?:\\b(?:class(?:Name)?|tw)\\s*=\\s*(?:(?:{([\\w\\d\\s!?_\\-:/${}()[\\]\"'`,]+)})|([\"'`][\\w\\d\\s_\\-:/]+[\"'`])))",
+                            "(?:[\"'`]([\\.\\w\\d\\s_\\-:/${}()[\\]]+)[\"'`])"
+                        ],
+                        "typescript": [
+                            "(?:\\b(?:class(?:Name)?|tw)\\s*=\\s*(?:(?:{([\\w\\d\\s!?_\\-:/${}()[\\]\"'`,]+)})|([\"'`][\\w\\d\\s_\\-:/]+[\"'`])))",
+                            "(?:[\"'`]([\\.\\w\\d\\s_\\-:/${}()[\\]]+)[\"'`])"
+                        ],
+                        "typescriptreact": [
+                            "(?:\\b(?:class(?:Name)?|tw)\\s*=\\s*(?:(?:{([\\w\\d\\s!?_\\-:/${}()[\\]\"'`,]+)})|([\"'`][\\w\\d\\s_\\-:/]+[\"'`])))",
+                            "(?:[\"'`]([\\.\\w\\d\\s_\\-:/${}()[\\]]+)[\"'`])"
+                        ]
                     },
-                    "headwind.runOnSave": {
-                        "type": "boolean",
-                        "default": true,
-                        "description": "A flag that controls whether or not Headwind will sort your Tailwind CSS classes on save.",
-                        "scope": "window"
-                    },
-                    "headwind.removeDuplicates": {
-                        "default": true,
-                        "description": "A flag that controls whether or not Headwind will remove duplicate Tailwind CSS classes.",
-                        "type": "boolean",
-                        "scope": "window"
-                    },
-                    "headwind.prependCustomClasses": {
-                        "default": false,
-                        "description": "A flag that controls whether or not Headwind will move custom CSS classes before (true) or after (false) the Tailwind CSS classes.",
-                        "type": "boolean",
-                        "scope": "window"
-                    },
-                    "headwind.customTailwindPrefix": {
-                        "default": "",
-                        "description": "If the Tailwind Prefix function is used, this can be specified here (e.g. tw-).",
-                        "type": "string",
-                        "scope": "window"
-                    }
+                    "description": "An object with language IDs as keys and their values determining the regex to search for Tailwind CSS classes.",
+                    "scope": "window"
+                },
+                "headwind.runOnSave": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "A flag that controls whether or not Headwind will sort your Tailwind CSS classes on save.",
+                    "scope": "window"
+                },
+                "headwind.removeDuplicates": {
+                    "default": true,
+                    "description": "A flag that controls whether or not Headwind will remove duplicate Tailwind CSS classes.",
+                    "type": "boolean",
+                    "scope": "window"
+                },
+                "headwind.prependCustomClasses": {
+                    "default": false,
+                    "description": "A flag that controls whether or not Headwind will move custom CSS classes before (true) or after (false) the Tailwind CSS classes.",
+                    "type": "boolean",
+                    "scope": "window"
+                },
+                "headwind.customTailwindPrefix": {
+                    "default": "",
+                    "description": "If the Tailwind Prefix function is used, this can be specified here (e.g. tw-).",
+                    "type": "string",
+                    "scope": "window"
                 }
+            }
         }
     },
     "scripts": {
