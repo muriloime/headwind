@@ -148,6 +148,7 @@
     },
     "dependencies": {
         "rustywind": "^0.7.1",
-        "tailwind-sort": "^2.0.0"
+        "tailwind-sort": "^2.0.0",
+        "tailwindcss": "^4.1.18"
     }
 }

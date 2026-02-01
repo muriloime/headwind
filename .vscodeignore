@@ -1,0 +1,15 @@
+.vscode/**
+.agent-state.json
+.circleci/**
+.github/**
+docs/**
+img/**
+src/**
+tests/**
+tsconfig.json
+jest.config.js
+.gitignore
+*.vsix
+node_modules/@types/**
+node_modules/.bin/**
+!out/**
