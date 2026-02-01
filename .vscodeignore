@@ -13,3 +13,5 @@ jest.config.js
 node_modules/@types/**
 node_modules/.bin/**
 !out/**
+
+headwind*.tgz
