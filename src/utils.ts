@@ -39,6 +39,7 @@ export async function processText(
 	}
 
 	const matchers = buildMatchers(langConfig);
+	console.log('[Headwind DEBUG] Built', matchers.length, 'matchers for language');
 	const matches: {
 		classString: string;
 		startPosition: number;
@@ -50,6 +51,7 @@ export async function processText(
 		getTextMatch(matcher.regex, text, (classString, startPosition) => {
 			// Skip if has headwind-ignore
 			if (!classString.includes('headwind-ignore')) {
+				console.log('[Headwind DEBUG] Raw match:', classString.substring(0, 50), 'at', startPosition);
 				matches.push({
 					classString,
 					startPosition,
@@ -60,8 +62,11 @@ export async function processText(
 		});
 	}
 
+	console.log('[Headwind DEBUG] Total raw matches:', matches.length);
+
 	// If no matches, return original text
 	if (matches.length === 0) {
+		console.log('[Headwind DEBUG] No matches found, returning original text');
 		return text;
 	}
 
@@ -93,13 +98,21 @@ export async function processText(
 	filteredMatches.sort((a, b) => b.startPosition - a.startPosition);
 
 	let result = text;
+	console.log('[Headwind DEBUG] Found', filteredMatches.length, 'matches to process');
 
 	for (const match of filteredMatches) {
+		console.log('[Headwind DEBUG] Processing:', match.classString.substring(0, 50));
+		console.log('[Headwind DEBUG] Separator:', match.separator, 'Replacement:', match.replacement);
+		console.log('[Headwind DEBUG] Options:', JSON.stringify(options).substring(0, 150));
 		const sorted = await sortClassString(match.classString, {
 			...options,
 			separator: match.separator || options.separator,
 			replacement: match.replacement || options.replacement,
 		});
+
+		console.log('[Headwind DEBUG] Original:', match.classString.substring(0, 50));
+		console.log('[Headwind DEBUG] Sorted:  ', sorted.substring(0, 50));
+		console.log('[Headwind DEBUG] Changed: ', sorted !== match.classString);
 
 		if (sorted !== match.classString) {
 			result =

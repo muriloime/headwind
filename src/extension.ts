@@ -4,6 +4,47 @@ import { commands, workspace, ExtensionContext, Range, window } from 'vscode';
 import { processText, processFile, LangConfig } from './utils';
 import { spawn } from 'child_process';
 import { rustyWindPath } from 'rustywind';
+import * as path from 'path';
+import * as fs from 'fs';
+
+/**
+ * Finds the directory containing tailwind.config.js
+ * Searches workspace root first, then recursively searches subdirectories
+ */
+async function findTailwindConfigDir(workspaceDir: string | undefined): Promise<string | undefined> {
+    if (!workspaceDir) return undefined;
+
+    // Check common config file names
+    const configNames = [
+        'tailwind.config.js',
+        'tailwind.config.cjs',
+        'tailwind.config.mjs',
+        'tailwind.config.ts'
+    ];
+
+    // First, check workspace root
+    for (const configName of configNames) {
+        const rootConfigPath = path.join(workspaceDir, configName);
+        if (fs.existsSync(rootConfigPath)) {
+            console.log('[Headwind] Found Tailwind config at workspace root:', rootConfigPath);
+            return workspaceDir;
+        }
+    }
+
+    // If not in root, search recursively using VS Code's findFiles
+    // This respects .gitignore and is more efficient than manual traversal
+    for (const configName of configNames) {
+        const files = await workspace.findFiles(`**/${configName}`, '**/node_modules/**', 1);
+        if (files.length > 0) {
+            const configDir = path.dirname(files[0].fsPath);
+            console.log('[Headwind] Found Tailwind config at:', files[0].fsPath);
+            return configDir;
+        }
+    }
+
+    console.log('[Headwind] No Tailwind config found, using workspace root');
+    return workspaceDir;
+}
 
 const getConfiguration = () => {
     const config = workspace.getConfiguration('headwind');
@@ -31,14 +72,21 @@ export function activate(context: ExtensionContext) {
             // Get workspace directory for resolving Tailwind config
             const workspaceDir = workspace.workspaceFolders?.[0]?.uri.fsPath;
 
+            // Find the directory containing tailwind.config.js
+            const tailwindConfigDir = await findTailwindConfigDir(workspaceDir);
+
             const options = {
                 shouldRemoveDuplicates: config.removeDuplicates,
                 shouldPrependCustomClasses: config.prependCustomClasses,
                 customTailwindPrefix: config.customTailwindPrefix,
-                baseDir: workspaceDir,  // Pass workspace directory to @herb-tools
+                baseDir: tailwindConfigDir,  // Pass directory containing tailwind config
             };
 
             const langCfg = config.classRegex[editorLangId] || config.classRegex['html'];
+
+            console.log('[Headwind DEBUG] Language ID:', editorLangId);
+            console.log('[Headwind DEBUG] Has config for language:', !!config.classRegex[editorLangId]);
+            console.log('[Headwind DEBUG] Using config:', JSON.stringify(langCfg).substring(0, 100));
 
             try {
                 // Check if we have configuration for this language

@@ -1,7 +1,7 @@
 {
     "name": "headwind-haml-fork",
     "displayName": "Headwind (haml fork)",
-    "description": "An opinionated class sorter for Tailwind CSS with support for haml",
+    "description": "A class sorter for Tailwind CSS with support for haml(prettier plugin). Automatically sort your Tailwind CSS classes based on an opinionated class order every time you save a file.",
     "keywords": [
         "tailwind",
         "tailwindcss",
