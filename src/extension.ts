@@ -8,8 +8,9 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 /**
- * Finds the directory containing tailwind.config.js
+ * Finds the tailwind.config.js file path
  * Searches workspace root first, then recursively searches subdirectories
+ * @returns The directory containing the config if found at root, or the full path to the config file if in subdirectory
  */
 async function findTailwindConfigDir(workspaceDir: string | undefined): Promise<string | undefined> {
     if (!workspaceDir) return undefined;
@@ -36,9 +37,11 @@ async function findTailwindConfigDir(workspaceDir: string | undefined): Promise<
     for (const configName of configNames) {
         const files = await workspace.findFiles(`**/${configName}`, '**/node_modules/**', 1);
         if (files.length > 0) {
-            const configDir = path.dirname(files[0].fsPath);
-            console.log('[Headwind] Found Tailwind config at:', files[0].fsPath);
-            return configDir;
+            const configPath = files[0].fsPath;
+            console.log('[Headwind] Found Tailwind config at:', configPath);
+            // Return the full path to the config file itself
+            // tailwind-sort will handle loading it
+            return configPath;
         }
     }
 
