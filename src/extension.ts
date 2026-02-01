@@ -87,9 +87,9 @@ export function activate(context: ExtensionContext) {
 
             const langCfg = config.classRegex[editorLangId] || config.classRegex['html'];
 
-            console.log('[Headwind DEBUG] Language ID:', editorLangId);
-            console.log('[Headwind DEBUG] Has config for language:', !!config.classRegex[editorLangId]);
-            console.log('[Headwind DEBUG] Using config:', JSON.stringify(langCfg).substring(0, 100));
+            // console.log('[Headwind DEBUG] Language ID:', editorLangId);
+            // console.log('[Headwind DEBUG] Has config for language:', !!config.classRegex[editorLangId]);
+            // console.log('[Headwind DEBUG] Using config:', JSON.stringify(langCfg).substring(0, 100));
 
             try {
                 // Check if we have configuration for this language

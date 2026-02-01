@@ -51,7 +51,7 @@ export async function processText(
 		getTextMatch(matcher.regex, text, (classString, startPosition) => {
 			// Skip if has headwind-ignore
 			if (!classString.includes('headwind-ignore')) {
-				console.log('[Headwind DEBUG] Raw match:', classString.substring(0, 50), 'at', startPosition);
+				// console.log('[Headwind DEBUG] Raw match:', classString.substring(0, 50), 'at', startPosition);
 				matches.push({
 					classString,
 					startPosition,
@@ -66,7 +66,7 @@ export async function processText(
 
 	// If no matches, return original text
 	if (matches.length === 0) {
-		console.log('[Headwind DEBUG] No matches found, returning original text');
+		// console.log('[Headwind DEBUG] No matches found, returning original text');
 		return text;
 	}
 
@@ -101,18 +101,18 @@ export async function processText(
 	console.log('[Headwind DEBUG] Found', filteredMatches.length, 'matches to process');
 
 	for (const match of filteredMatches) {
-		console.log('[Headwind DEBUG] Processing:', match.classString.substring(0, 50));
-		console.log('[Headwind DEBUG] Separator:', match.separator, 'Replacement:', match.replacement);
-		console.log('[Headwind DEBUG] Options:', JSON.stringify(options).substring(0, 150));
+		// console.log('[Headwind DEBUG] Processing:', match.classString.substring(0, 50));
+		// console.log('[Headwind DEBUG] Separator:', match.separator, 'Replacement:', match.replacement);
+		// console.log('[Headwind DEBUG] Options:', JSON.stringify(options).substring(0, 150));
 		const sorted = await sortClassString(match.classString, {
 			...options,
 			separator: match.separator || options.separator,
 			replacement: match.replacement || options.replacement,
 		});
 
-		console.log('[Headwind DEBUG] Original:', match.classString.substring(0, 50));
-		console.log('[Headwind DEBUG] Sorted:  ', sorted.substring(0, 50));
-		console.log('[Headwind DEBUG] Changed: ', sorted !== match.classString);
+		// console.log('[Headwind DEBUG] Original:', match.classString.substring(0, 50));
+		// console.log('[Headwind DEBUG] Sorted:  ', sorted.substring(0, 50));
+		// console.log('[Headwind DEBUG] Changed: ', sorted !== match.classString);
 
 		if (sorted !== match.classString) {
 			result =
