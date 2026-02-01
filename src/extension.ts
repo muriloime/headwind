@@ -9,8 +9,6 @@ const config = workspace.getConfiguration();
 const langConfig: { [key: string]: LangConfig | LangConfig[] } =
     config.get('headwind.classRegex') || {};
 
-const sortOrder = config.get('headwind.defaultSortOrder');
-
 const customTailwindPrefixConfig = config.get('headwind.customTailwindPrefix');
 const customTailwindPrefix =
     typeof customTailwindPrefixConfig === 'string'

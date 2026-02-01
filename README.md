@@ -1,8 +1,10 @@
-# Headwind
+# Headwind (HAML Fork)
 
 [![CircleCI](https://circleci.com/gh/heybourn/headwind.svg?style=svg)](https://circleci.com/gh/heybourn/headwind)
 
 Headwind is an opinionated Tailwind CSS class sorter for Visual Studio Code. It enforces consistent ordering of classes by parsing your code and reprinting class tags to follow a given order.
+
+This version is a fork with **improved support for HAML** and other template languages.
 
 > Headwind runs on save, will remove duplicate classes and can even sort entire workspaces.
 
@@ -33,6 +35,10 @@ Any breakpoints or unknown classes will be moved to the end of the class list, w
 
 use the string headwind-ignore-all to skip the whole file, 
 use the string headwind-ignore to skip a single line 
+
+## Development
+
+If you want to contribute or test the extension locally, please refer to the [Development Guide](docs/development.md).
 
 ## Customisation
 
@@ -133,10 +139,6 @@ Good example value: `valueMatch w-64 h-full bg-blue-400 relative`
 **Note**: Changes made to Headwind's JSON configuration options may not take effect immediately. When experimenting with custom `classRegex`, after each change you should open the control pallete (Ctrl/Cmd + Shift + P) and run `Developer: Reload Window` to ensure changes are applied.
 
 <hr>
-
-### `headwind.defaultSortOrder`:
-
-An array that determines Headwind's default sort order.
 
 ### `headwind.removeDuplicates`:
 
