@@ -148,8 +148,8 @@
         "typescript": "^5.9.3"
     },
     "dependencies": {
-        "rustywind": "^0.7.1",
-        "tailwind-sort": "^2.0.0",
+        "rustywind": "^0.24.3",
+        "tailwind-sort": "^2.0.1",
         "tailwindcss": "^4.1.18"
     }
 }
