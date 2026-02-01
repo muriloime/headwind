@@ -338,8 +338,8 @@ describe('extract className (jsx) string with single regex', () => {
 });
 
 describe('extract className (jsx) string(s) with multiple regexes', () => {
-	const configRegex: { [key: string]: string } =
-		pjson.contributes.configuration[0].properties['headwind.classRegex']
+	const configRegex: { [key: string]: any } =
+		pjson.contributes.configuration.properties['headwind.classRegex']
 			.default;
 	const jsxLanguages = [
 		'javascript',
@@ -648,8 +648,8 @@ describe('extract className (jsx) string(s) with multiple regexes', () => {
 });
 
 describe('twin macro - extract tw prop (jsx) string(s) with multiple regexes', () => {
-	const configRegex: { [key: string]: string } =
-		pjson.contributes.configuration[0].properties['headwind.classRegex']
+	const configRegex: { [key: string]: any } =
+		pjson.contributes.configuration.properties['headwind.classRegex']
 			.default;
 	const jsxLanguages = [
 		'javascript',
