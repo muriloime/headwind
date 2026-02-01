@@ -1,7 +1,7 @@
 'use strict';
 
 import { commands, workspace, ExtensionContext, Range, window } from 'vscode';
-import { processText, LangConfig } from './utils';
+import { processText, processFile, LangConfig } from './utils';
 import { spawn } from 'child_process';
 import { rustyWindPath } from 'rustywind';
 
