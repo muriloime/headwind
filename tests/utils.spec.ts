@@ -2,6 +2,7 @@ import {
 	sortClassString,
 	getTextMatch,
 	buildMatchers,
+	processText,
 	Matcher,
 	LangConfig,
 } from '../src/utils';

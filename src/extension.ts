@@ -5,29 +5,16 @@ import { processText, LangConfig } from './utils';
 import { spawn } from 'child_process';
 import { rustyWindPath } from 'rustywind';
 
-const config = workspace.getConfiguration();
-const langConfig: { [key: string]: LangConfig | LangConfig[] } =
-    config.get('headwind.classRegex') || {};
-
-const customTailwindPrefixConfig = config.get('headwind.customTailwindPrefix');
-const customTailwindPrefix =
-    typeof customTailwindPrefixConfig === 'string'
-        ? customTailwindPrefixConfig
-        : '';
-
-const shouldRemoveDuplicatesConfig = config.get('headwind.removeDuplicates');
-const shouldRemoveDuplicates =
-    typeof shouldRemoveDuplicatesConfig === 'boolean'
-        ? shouldRemoveDuplicatesConfig
-        : true;
-
-const shouldPrependCustomClassesConfig = config.get(
-    'headwind.prependCustomClasses'
-);
-const shouldPrependCustomClasses =
-    typeof shouldPrependCustomClassesConfig === 'boolean'
-        ? shouldPrependCustomClassesConfig
-        : false;
+const getConfiguration = () => {
+    const config = workspace.getConfiguration('headwind');
+    return {
+        runOnSave: config.get<boolean>('runOnSave', true),
+        classRegex: config.get<{ [key: string]: LangConfig | LangConfig[] }>('classRegex', {}),
+        customTailwindPrefix: config.get<string>('customTailwindPrefix', ''),
+        removeDuplicates: config.get<boolean>('removeDuplicates', true),
+        prependCustomClasses: config.get<boolean>('prependCustomClasses', false),
+    };
+};
 
 export function activate(context: ExtensionContext) {
     let disposable = commands.registerCommand(
@@ -39,33 +26,38 @@ export function activate(context: ExtensionContext) {
             const editorText = editor.document.getText();
             const editorLangId = editor.document.languageId;
 
+            const config = getConfiguration();
+
             const options = {
-                shouldRemoveDuplicates,
-                shouldPrependCustomClasses,
-                customTailwindPrefix,
+                shouldRemoveDuplicates: config.removeDuplicates,
+                shouldPrependCustomClasses: config.prependCustomClasses,
+                customTailwindPrefix: config.customTailwindPrefix,
             };
 
-            const langCfg = langConfig[editorLangId] || langConfig['html'];
+            const langCfg = config.classRegex[editorLangId] || config.classRegex['html'];
 
-            // Process the text using the new processText function
-            const sortedText = await processText(editorText, langCfg, options);
+            try {
+                // Process the text using the new processText function
+                const sortedText = await processText(editorText, langCfg, options);
 
-            // If text changed, replace the entire document
-            if (sortedText !== editorText) {
-                const fullRange = new Range(
-                    editor.document.positionAt(0),
-                    editor.document.positionAt(editorText.length)
-                );
+                // If text changed, replace the entire document
+                if (sortedText !== editorText) {
+                    const fullRange = new Range(
+                        editor.document.positionAt(0),
+                        editor.document.positionAt(editorText.length)
+                    );
 
-                const success = await editor.edit((editBuilder) => {
-                    editBuilder.replace(fullRange, sortedText);
-                });
+                    const success = await editor.edit((editBuilder) => {
+                        editBuilder.replace(fullRange, sortedText);
+                    });
 
-                if (!success) {
-                    console.log('Failed to apply edits!');
-                } else {
-                    console.log('Edits applied successfully!');
+                    if (!success) {
+                        window.showErrorMessage('Headwind: Failed to apply edits!');
+                    }
                 }
+            } catch (error) {
+                console.error('Headwind error:', error);
+                window.showErrorMessage(`Headwind error: ${error instanceof Error ? error.message : String(error)}`);
             }
         }
     );
@@ -73,11 +65,15 @@ export function activate(context: ExtensionContext) {
     let runOnProject = commands.registerCommand(
         'headwind.sortTailwindClassesOnWorkspace',
         async () => {
-            let workspaceFolder = workspace.workspaceFolders || [];
-            for (const folder of workspaceFolder) {
-
+            const config = getConfiguration();
+            let workspaceFolders = workspace.workspaceFolders || [];
+            
+            for (const folder of workspaceFolders) {
                 // Call sortTailwindClasses for all workspace files with extensions ['jade', 'haml']
-                const extensionFiles = await workspace.findFiles('**/*.{jade,haml}');
+                const extensionFiles = await workspace.findFiles(
+                    '**/*.{jade,haml}',
+                    '**/node_modules/**'
+                );
 
                 window.showInformationMessage(
                     `Running Headwind on: ${folder.uri.fsPath}, ${extensionFiles.length} files found.`
@@ -86,7 +82,7 @@ export function activate(context: ExtensionContext) {
                 let rustyWindArgs = [
                     folder.uri.fsPath,
                     '--write',
-                    shouldRemoveDuplicates ? '' : '--allow-duplicates',
+                    config.removeDuplicates ? '' : '--allow-duplicates',
                 ].filter((arg) => arg !== '');
 
                 let rustyWindProc = spawn(rustyWindPath, rustyWindArgs);
@@ -106,10 +102,21 @@ export function activate(context: ExtensionContext) {
                     }
                 });
 
+                const options = {
+                    shouldRemoveDuplicates: config.removeDuplicates,
+                    shouldPrependCustomClasses: config.prependCustomClasses,
+                    customTailwindPrefix: config.customTailwindPrefix,
+                };
+
                 for (const file of extensionFiles) {
-                    const document = await workspace.openTextDocument(file);
-                    const editor = await window.showTextDocument(document);
-                    await commands.executeCommand('headwind.sortTailwindClasses');
+                    const langId = file.fsPath.endsWith('.haml') ? 'haml' : 'jade';
+                    const langCfg = config.classRegex[langId] || config.classRegex['html'];
+                    
+                    try {
+                        await processFile(file.fsPath, langCfg, options);
+                    } catch (error) {
+                        console.error(`Failed to process ${file.fsPath}:`, error);
+                    }
                 }
             }
         }
@@ -119,11 +126,11 @@ export function activate(context: ExtensionContext) {
     context.subscriptions.push(disposable);
 
     // if runOnSave is enabled organize tailwind classes before saving
-    if (config.get('headwind.runOnSave')) {
-        context.subscriptions.push(
-            workspace.onWillSaveTextDocument((_e) => {
+    context.subscriptions.push(
+        workspace.onWillSaveTextDocument((_e) => {
+            if (getConfiguration().runOnSave) {
                 commands.executeCommand('headwind.sortTailwindClasses');
-            })
-        );
-    }
+            }
+        })
+    );
 }
