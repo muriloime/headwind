@@ -8,6 +8,12 @@ This version is a fork with **improved support for HAML** and other template lan
 
 > Headwind runs on save, will remove duplicate classes and can even sort entire workspaces.
 
+
+## Deploying a new version:
+
+`npm version patch && npx vsce package && git push`
+
+
 ---
 
 **[Get it from the VS Code Marketplace →](https://marketplace.visualstudio.com/items?itemName=heybourn.headwind)**
