@@ -14,13 +14,13 @@
         "color": "#f1f5f8"
     },
     "icon": "icon.png",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "publisher": "Murilo",
     "license": "MIT",
     "author": "Ryan Heybourn <ryan@heybourn.com>, Murilo <muriloime@gmail.com>",
     "repository": "https://github.com/muriloime/headwind",
     "engines": {
-        "vscode": "^1.32.0"
+        "vscode": "^1.75.0"
     },
     "categories": [
         "Other"
