@@ -94,10 +94,19 @@ export async function processText(
 
 	let result = text;
 	for (const match of filteredMatches) {
+		// Smart detection: if string starts with dot and has dots but no spaces, use dot separator
+		let separator = match.separator || options.separator;
+		let replacement = match.replacement || options.replacement;
+
+		if (!separator && match.classString.startsWith('.') && match.classString.includes('.') && !match.classString.includes(' ')) {
+			separator = /\./g;
+			replacement = '.';
+		}
+
 		const sorted = await sortClassString(match.classString, {
 			...options,
-			separator: match.separator || options.separator,
-			replacement: match.replacement || options.replacement,
+			separator,
+			replacement,
 		});
 
 		if (sorted !== match.classString) {
