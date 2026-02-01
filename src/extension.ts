@@ -36,7 +36,24 @@ export function activate(context: ExtensionContext) {
 
             const langCfg = config.classRegex[editorLangId] || config.classRegex['html'];
 
+            // Debug logging
+            console.log('Headwind debug:', {
+                languageId: editorLangId,
+                hasLangConfig: !!langCfg,
+                configuredLanguages: Object.keys(config.classRegex),
+                documentLength: editorText.length
+            });
+
             try {
+                // Check if we have configuration for this language
+                if (!langCfg) {
+                    window.showWarningMessage(
+                        `Headwind: No configuration found for language "${editorLangId}". ` +
+                        `Add configuration in settings under "headwind.classRegex".`
+                    );
+                    return;
+                }
+
                 // Process the text using the new processText function
                 const sortedText = await processText(editorText, langCfg, options);
 
@@ -53,7 +70,11 @@ export function activate(context: ExtensionContext) {
 
                     if (!success) {
                         window.showErrorMessage('Headwind: Failed to apply edits!');
+                    } else {
+                        window.setStatusBarMessage('Headwind: Classes sorted', 2000);
                     }
+                } else {
+                    window.setStatusBarMessage('Headwind: No changes needed (classes already sorted)', 2000);
                 }
             } catch (error) {
                 console.error('Headwind error:', error);
