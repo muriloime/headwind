@@ -158,6 +158,10 @@ Headwind will run on save by default (if a `tailwind.config.js` file is present 
 
 `"headwind.runOnSave": false`
 
+## Development
+
+Instructions for developing, testing, and releasing the extension can be found in the [Development Guide](docs/development.md).
+
 ## Contributing
 
 Headwind is open-source and contributions are always welcome. If you're interested in submitting a pull request, please take a moment to review [CONTRIBUTING.md](.github/CONTRIBUTING.md).

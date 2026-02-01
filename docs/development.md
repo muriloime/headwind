@@ -69,3 +69,27 @@ Or use the watch mode:
 ```bash
 npm run watch
 ```
+
+## Releasing
+
+To publish a new version of the extension:
+
+1. **Bump the version:**
+   Use `npm version` to bump the version in `package.json` and create a git tag.
+   ```bash
+   npm version patch # or minor, or major
+   ```
+
+2. **Package the extension:**
+   You need the `vsce` tool installed globally (`npm install -g @vscode/vsce`).
+   ```bash
+   npx vsce package
+   ```
+   This generates a `.vsix` file.
+
+3. **Publishing:**
+   If you have the necessary permissions and a Personal Access Token (PAT):
+   ```bash
+   npx vsce publish
+   ```
+   *Note: Publishing usually requires being part of the `muriloime` publisher on the VS Code Marketplace.*
