@@ -19,7 +19,7 @@ const getConfiguration = () => {
 export function activate(context: ExtensionContext) {
     let disposable = commands.registerCommand(
         'headwind.sortTailwindClasses',
-        async () => {
+        async (showNotification: boolean = true) => {
             const editor = window.activeTextEditor;
             if (!editor) return;
 
@@ -71,10 +71,18 @@ export function activate(context: ExtensionContext) {
                     if (!success) {
                         window.showErrorMessage('Headwind: Failed to apply edits!');
                     } else {
-                        window.setStatusBarMessage('Headwind: Classes sorted', 2000);
+                        // Show notification only if manually triggered
+                        if (showNotification) {
+                            window.showInformationMessage('✓ Headwind: Classes sorted successfully');
+                        }
+                        console.log('Headwind: Classes sorted successfully');
                     }
                 } else {
-                    window.setStatusBarMessage('Headwind: No changes needed (classes already sorted)', 2000);
+                    // Show notification that no changes were needed
+                    if (showNotification) {
+                        window.showInformationMessage('ℹ Headwind: Classes are already sorted');
+                    }
+                    console.log('Headwind: No changes needed (classes already sorted)');
                 }
             } catch (error) {
                 console.error('Headwind error:', error);
@@ -150,7 +158,8 @@ export function activate(context: ExtensionContext) {
     context.subscriptions.push(
         workspace.onWillSaveTextDocument((_e) => {
             if (getConfiguration().runOnSave) {
-                commands.executeCommand('headwind.sortTailwindClasses');
+                // Don't show notifications on auto-save
+                commands.executeCommand('headwind.sortTailwindClasses', false);
             }
         })
     );
