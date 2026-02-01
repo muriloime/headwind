@@ -5372,6 +5372,6 @@
     },
     "dependencies": {
         "rustywind": "^0.7.1",
-        "tailwind-class-sorter": "file:../tailwind-class-sorter"
+        "tailwind-sort": "^2.0.0"
     }
 }

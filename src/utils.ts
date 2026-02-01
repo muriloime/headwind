@@ -1,4 +1,4 @@
-// Re-export everything from the tailwind-class-sorter package
+// Re-export everything from the tailwind-sort package
 export {
 	sortClassString,
 	buildMatchers,
@@ -8,4 +8,4 @@ export {
 	Options,
 	LangConfig,
 	Matcher
-} from 'tailwind-class-sorter';
+} from 'tailwind-sort';
