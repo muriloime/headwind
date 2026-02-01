@@ -33,8 +33,22 @@ Any breakpoints or unknown classes will be moved to the end of the class list, w
 
 ## Skip execution
 
-use the string headwind-ignore-all to skip the whole file, 
-use the string headwind-ignore to skip a single line 
+use the string headwind-ignore-all to skip the whole file,
+use the string headwind-ignore to skip a single line
+
+## Troubleshooting
+
+If you encounter issues with Headwind, you can enable VS Code's Extension Host logging to see detailed error messages:
+
+1. Open **Help** → **Toggle Developer Tools** (or press `Ctrl+Shift+I` / `Cmd+Option+I`)
+2. Go to the **Console** tab
+3. Look for messages prefixed with `Headwind error:`
+4. You can also check the **Output** panel (`View` → `Output`) and select **Extension Host** from the dropdown
+
+Common issues:
+- **"No configuration found for language"**: Add a regex configuration for your file type in `headwind.classRegex` settings
+- **Classes not sorting**: Ensure you have a `tailwind.config.js` file in your workspace root
+- **Extension not running on save**: Check that `headwind.runOnSave` is enabled in settings
 
 ## Development
 

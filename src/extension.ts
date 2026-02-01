@@ -28,21 +28,17 @@ export function activate(context: ExtensionContext) {
 
             const config = getConfiguration();
 
+            // Get workspace directory for resolving Tailwind config
+            const workspaceDir = workspace.workspaceFolders?.[0]?.uri.fsPath;
+
             const options = {
                 shouldRemoveDuplicates: config.removeDuplicates,
                 shouldPrependCustomClasses: config.prependCustomClasses,
                 customTailwindPrefix: config.customTailwindPrefix,
+                baseDir: workspaceDir,  // Pass workspace directory to @herb-tools
             };
 
             const langCfg = config.classRegex[editorLangId] || config.classRegex['html'];
-
-            // Debug logging
-            console.log('Headwind debug:', {
-                languageId: editorLangId,
-                hasLangConfig: !!langCfg,
-                configuredLanguages: Object.keys(config.classRegex),
-                documentLength: editorText.length
-            });
 
             try {
                 // Check if we have configuration for this language
@@ -54,16 +50,8 @@ export function activate(context: ExtensionContext) {
                     return;
                 }
 
-                console.log('Headwind: Processing document...');
-                console.log('  Original length:', editorText.length);
-                console.log('  First 200 chars:', editorText.slice(0, 200));
-
                 // Process the text using the new processText function
                 const sortedText = await processText(editorText, langCfg, options);
-
-                console.log('  Sorted length:', sortedText.length);
-                console.log('  First 200 chars:', sortedText.slice(0, 200));
-                console.log('  Text changed?', sortedText !== editorText);
 
                 // If text changed, replace the entire document
                 if (sortedText !== editorText) {
@@ -83,14 +71,12 @@ export function activate(context: ExtensionContext) {
                         if (showNotification) {
                             window.showInformationMessage('✓ Headwind: Classes sorted successfully');
                         }
-                        console.log('Headwind: Classes sorted successfully');
                     }
                 } else {
                     // Show notification that no changes were needed
                     if (showNotification) {
                         window.showInformationMessage('ℹ Headwind: Classes are already sorted');
                     }
-                    console.log('Headwind: No changes needed (classes already sorted)');
                 }
             } catch (error) {
                 console.error('Headwind error:', error);
@@ -124,17 +110,8 @@ export function activate(context: ExtensionContext) {
 
                 let rustyWindProc = spawn(rustyWindPath, rustyWindArgs);
 
-                rustyWindProc.stdout.on(
-                    'data',
-                    (data) =>
-                        data &&
-                        data.toString() !== '' &&
-                        console.log('rustywind stdout:\n', data.toString())
-                );
-
                 rustyWindProc.stderr.on('data', (data) => {
                     if (data && data.toString() !== '') {
-                        console.log('rustywind stderr:\n', data.toString());
                         window.showErrorMessage(`Headwind error: ${data.toString()}`);
                     }
                 });
