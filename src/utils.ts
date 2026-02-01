@@ -93,12 +93,24 @@ export async function processText(
 	filteredMatches.sort((a, b) => b.startPosition - a.startPosition);
 
 	let result = text;
+	console.log('Headwind processText: Found', filteredMatches.length, 'matches to process');
+
 	for (const match of filteredMatches) {
+		console.log('  Processing match:', {
+			classString: match.classString,
+			separator: match.separator,
+			replacement: match.replacement
+		});
+
 		const sorted = await sortClassString(match.classString, {
 			...options,
 			separator: match.separator || options.separator,
 			replacement: match.replacement || options.replacement,
 		});
+
+		console.log('    Original:', match.classString);
+		console.log('    Sorted:  ', sorted);
+		console.log('    Changed: ', sorted !== match.classString);
 
 		if (sorted !== match.classString) {
 			result =

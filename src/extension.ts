@@ -54,8 +54,16 @@ export function activate(context: ExtensionContext) {
                     return;
                 }
 
+                console.log('Headwind: Processing document...');
+                console.log('  Original length:', editorText.length);
+                console.log('  First 200 chars:', editorText.slice(0, 200));
+
                 // Process the text using the new processText function
                 const sortedText = await processText(editorText, langCfg, options);
+
+                console.log('  Sorted length:', sortedText.length);
+                console.log('  First 200 chars:', sortedText.slice(0, 200));
+                console.log('  Text changed?', sortedText !== editorText);
 
                 // If text changed, replace the entire document
                 if (sortedText !== editorText) {
